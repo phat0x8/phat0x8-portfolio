@@ -1,0 +1,306 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { getCollection } from 'astro:content';
+import { PROFILE, RESEARCH_ITEMS, PROJECTS } from '../data/profile';
+import BiText from '../components/BiText.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  activeNav?: 'home' | 'research' | 'projects' | 'casebooks' | 'about';
+}
+
+const {
+  title,
+  description = 'Tan Phat Nguyen (@phat0x8) — Information Security Engineer specializing in SOC/DFIR, Enterprise System Administration, Web AppSec, and AI Threat Intelligence.',
+  activeNav = 'home',
+} = Astro.props;
+
+const casebooks = await getCollection('casebooks');
+const researchCount = String(RESEARCH_ITEMS.length).padStart(2, '0');
+const projectCount = String(PROJECTS.length).padStart(2, '0');
+const casebookCount = String(casebooks.length).padStart(2, '0');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: PROFILE.fullName,
+    alternateName: PROFILE.handle,
+    jobTitle: PROFILE.roleEn,
+    url: Astro.site?.toString() ?? 'https://phat0x8.workers.dev',
+    sameAs: [PROFILE.github, PROFILE.linkedin, PROFILE.credly, PROFILE.githubOrg],
+  },
+};
+---
+
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- OpenGraph & Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Zero-FOUC language bootstrap before first paint -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('phat0x8_lang');
+          var lang = saved === 'vi' ? 'vi' : 'en';
+          document.documentElement.dataset.lang = lang;
+          document.documentElement.lang = lang;
+        } catch (e) {}
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body id="top">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="/" class="brand" data-sfx="click">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span class="brand-name">{PROFILE.brand}</span>
+          <span class="brand-sub">{PROFILE.brandSub}</span>
+        </a>
+
+        <nav class="nav-links" id="primary-nav" aria-label="Primary navigation">
+          <a href="/" class:list={['nav-link', { active: activeNav === 'home' }]} aria-current={activeNav === 'home' ? 'page' : undefined}>
+            <BiText en="Home" vi="Trang chủ" />
+          </a>
+          <a href="/research/" class:list={['nav-link', { active: activeNav === 'research' }]} aria-current={activeNav === 'research' ? 'page' : undefined}>
+            <BiText en="Research" vi="Nghiên cứu" />
+          </a>
+          <a href="/projects/" class:list={['nav-link', { active: activeNav === 'projects' }]} aria-current={activeNav === 'projects' ? 'page' : undefined}>
+            <BiText en="Projects" vi="Dự án" />
+          </a>
+          <a href="/casebooks/" class:list={['nav-link', { active: activeNav === 'casebooks' }]} aria-current={activeNav === 'casebooks' ? 'page' : undefined}>
+            <BiText en="Casebooks" vi="Hồ sơ Lab" />
+          </a>
+          <a href="/about/" class:list={['nav-link', { active: activeNav === 'about' }]} aria-current={activeNav === 'about' ? 'page' : undefined}>
+            <BiText en="About" vi="Giới thiệu" />
+          </a>
+        </nav>
+
+        <div class="header-actions">
+          <button type="button" id="lang-toggle" class="hud-btn lang-toggle" aria-label="Toggle English or Vietnamese">
+            <span class="opt-en">EN</span>
+            <span class="opt-vi">VI</span>
+          </button>
+
+          <button type="button" id="sfx-toggle" class="hud-btn" aria-pressed="false" title="Retro Terminal Audio Feedback">
+            SFX: OFF
+          </button>
+
+          <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" class="hud-btn" data-sfx="click">
+            GitHub ↗
+          </a>
+
+          <button type="button" id="mobile-menu-btn" class="hud-btn mobile-menu-btn" aria-expanded="false" aria-controls="primary-nav">
+            MENU
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <slot name="hero" />
+
+    <div class="container workspace-grid">
+      <main class="main-col">
+        <slot />
+      </main>
+
+      <aside class="sidebar-col" aria-label="Operator profile and navigation">
+        <!-- Operator Dossier Card -->
+        <section class="terminal-card accent-emerald">
+          <div class="window-bar">
+            <span class="window-title">
+              <span class="window-dot"></span>
+              OPERATOR // PHAT0X8
+            </span>
+            <span class="window-controls" aria-hidden="true">- □ ×</span>
+          </div>
+          <div class="card-body">
+            <div class="operator-header">
+              <img src={PROFILE.avatar} alt={PROFILE.fullName} class="operator-avatar" width="64" height="64" />
+              <div>
+                <span class="operator-badge">IA · PHAT0X8</span>
+                <h2 class="operator-name">{PROFILE.fullName}</h2>
+                <p class="operator-handle">
+                  @{PROFILE.handle} · <BiText en="HCMC, VN" vi="TP.HCM, VN" />
+                </p>
+              </div>
+            </div>
+
+            <div class="status-pills">
+              <div class="status-pill ready">
+                <span class="pulse-dot"></span>
+                <BiText en={PROFILE.statusEn} vi={PROFILE.statusVi} />
+              </div>
+              <div class="status-pill edu">
+                ★ <BiText en={PROFILE.eduPillEn} vi={PROFILE.eduPillVi} />
+              </div>
+            </div>
+
+            <p class="operator-bio">
+              <BiText en={PROFILE.sidebarBioEn} vi={PROFILE.sidebarBioVi} />
+            </p>
+
+            <div class="sidebar-btn-row">
+              <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" class="btn btn-sm">
+                GitHub ↗
+              </a>
+              <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" class="btn btn-sm">
+                LinkedIn ↗
+              </a>
+            </div>
+
+            <div class="cv-download-strip">
+              <a href={PROFILE.cvEn} download="Tan_Phat_Nguyen_CV_EN.pdf" class="cv-pill" data-sfx="click">
+                ↓ CV (EN)
+              </a>
+              <a href={PROFILE.cvVi} download="Tan_Phat_Nguyen_CV_VN.pdf" class="cv-pill" data-sfx="click">
+                ↓ CV (VI)
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 01 Quick Navigation -->
+        <section class="sidebar-panel">
+          <h3 class="sidebar-heading">
+            <span>01</span>
+            <BiText en="Quick Navigation" vi="Điều hướng nhanh" />
+          </h3>
+          <div class="quick-nav-list">
+            <a href="/research/" class="quick-nav-item">
+              <BiText en="AI & Binary Research" vi="Nghiên cứu AI & Binary" />
+              <span class="quick-nav-meta">{researchCount} Papers</span>
+            </a>
+            <a href="/projects/" class="quick-nav-item">
+              <BiText en="Engineering & Infra" vi="Dự án Kỹ thuật & Hạ tầng" />
+              <span class="quick-nav-meta">{projectCount} Builds</span>
+            </a>
+            <a href="/casebooks/" class="quick-nav-item">
+              <BiText en="DFIR & SysAdmin Casebooks" vi="Hồ sơ DFIR & SysAdmin" />
+              <span class="quick-nav-meta">{casebookCount} Docs ↗</span>
+            </a>
+            <a href="/about/" class="quick-nav-item">
+              <BiText en="Experience & Toolbox" vi="Kinh nghiệm & Kỹ năng" />
+              <span class="quick-nav-meta">Dossier ↗</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 02 Verified Profiles -->
+        <section class="sidebar-panel">
+          <h3 class="sidebar-heading">
+            <span>02</span>
+            <BiText en="Verified Credentials" vi="Hồ sơ Xác thực" />
+          </h3>
+          <div class="platform-list">
+            <a href={PROFILE.credly} target="_blank" rel="noopener noreferrer" class="platform-card">
+              <div>
+                <div class="platform-name">Credly · Cisco</div>
+                <div class="platform-sub">CyberOps · CCNA ×2 · Data</div>
+              </div>
+              <span class="quick-nav-meta">4 Badges ↗</span>
+            </a>
+            <a href={PROFILE.githubOrg} target="_blank" rel="noopener noreferrer" class="platform-card">
+              <div>
+                <div class="platform-name">DevSecOps Lab Org</div>
+                <div class="platform-sub">DevSecOps-Researchers-Labs</div>
+              </div>
+              <span class="quick-nav-meta">GitHub ↗</span>
+            </a>
+            <a href={`mailto:${PROFILE.email}`} class="platform-card">
+              <div>
+                <div class="platform-name">Direct Email</div>
+                <div class="platform-sub">{PROFILE.email}</div>
+              </div>
+              <span class="quick-nav-meta">Mail ↗</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 03 Key Milestones -->
+        <section class="sidebar-panel">
+          <h3 class="sidebar-heading">
+            <span>03</span>
+            <BiText en="Key Milestones" vi="Dấu ấn Nổi bật" />
+          </h3>
+          <ul class="milestone-list">
+            <li>
+              <BiText
+                en="First Author — ICEEIS 2026 Abstract (IEEE Xplore #228)"
+                vi="Tác giả chính — Abstract ICEEIS 2026 (IEEE Xplore #228)"
+              />
+            </li>
+            <li>
+              <BiText
+                en="1+ Yr Multi-Site SysAdmin (130+ Incidents · 5+ Sites)"
+                vi="1+ Năm SysAdmin đa chi nhánh (130+ ca · 5+ điểm)"
+              />
+            </li>
+            <li>
+              <BiText
+                en="Vietnam InfoSec Contest 2025 & 2026 · NetAcad Riders ’26"
+                vi="Sinh viên An ninh mạng 2025 & 2026 · NetAcad Riders ’26"
+              />
+            </li>
+          </ul>
+          <div style="margin-top: 12px;">
+            <a href="/about/#awards" class="inline-link mono" style="font-size: 0.76rem;">
+              <BiText en="View all credentials & awards ↗" vi="Xem tất cả chứng chỉ & giải thưởng ↗" />
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <span class="footer-brand">PHAT0X8.SEC</span> ·
+          <BiText en="Defend · Automate · Investigate" vi="Phòng thủ · Tự động hóa · Điều tra số" />
+        </div>
+        <div>
+          © 2026 {PROFILE.fullName} ·
+          <BiText
+            en="Sanitized operational & academic research portfolio."
+            vi="Hồ sơ nghiên cứu & vận hành đã ẩn danh hóa chuẩn OPSEC."
+          />
+        </div>
+        <a href="#top" class="inline-link mono">
+          <BiText en="Back to top ↑" vi="Lên đầu trang ↑" />
+        </a>
+      </div>
+    </footer>
+
+    <script src="/site.js" is:inline></script>
+  </body>
+</html>

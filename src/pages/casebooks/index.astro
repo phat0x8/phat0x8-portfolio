@@ -1,0 +1,127 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BiText from '../../components/BiText.astro';
+
+const casebooks = (await getCollection('casebooks')).sort((a, b) => a.data.order - b.data.order);
+const categories = ['All', 'SysAdmin RCA', 'DFIR Lab', 'AppSec', 'Automation & SOP'] as const;
+
+const countByCat = (cat: string) =>
+  cat === 'All' ? casebooks.length : casebooks.filter((c) => c.data.category === cat).length;
+---
+
+<BaseLayout
+  title="DFIR & Enterprise Casebooks | phat0x8"
+  description="Sanitized incident RCAs, Digital Forensics lab investigations, OWASP AppSec hardening notes, and enterprise IT automation SOPs."
+  activeNav="casebooks"
+>
+  <section class="terminal-card accent-emerald">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        CASEBOOK_JOURNAL // SANITIZED_RCA_&_DFIR_LABS
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="section-kicker">OPERATIONAL & LAB JOURNAL</div>
+      <h1 class="section-title" style="font-size: 1.8rem; margin-bottom: 10px;">
+        <BiText en="DFIR Labs, Incident RCAs & SOPs" vi="Hồ sơ DFIR, Báo cáo RCA & Quy trình SOP" />
+      </h1>
+      <p style="margin: 0; color: var(--text-secondary);">
+        <BiText
+          en="Reproducible digital forensics write-ups, real-world enterprise incident Root Cause Analyses (strictly sanitized — zero internal IPs, credentials, or PII), and automation runbooks."
+          vi="Các báo cáo điều tra số có thể tái lập, phân tích nguyên nhân gốc rễ (RCA) từ vận hành thực tế đã ẩn danh hóa hoàn toàn (không IP nội bộ, mật khẩu hay dữ liệu nhạy cảm) cùng tài liệu tự động hóa SOP."
+        />
+      </p>
+    </div>
+  </section>
+
+  <!-- Interactive Search & Filter Bar -->
+  <section class="filter-bar" aria-label="Search and filter casebooks">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        type="search"
+        id="casebook-search"
+        class="search-input"
+        placeholder="Search by title, tool, PowerShell, DFIR, OWASP, SQL..."
+        data-placeholder-en="Search by title, tool, PowerShell, DFIR, OWASP, SQL..."
+        data-placeholder-vi="Tìm theo tiêu đề, công cụ, PowerShell, DFIR, OWASP, SQL..."
+        aria-label="Search casebooks"
+      />
+    </div>
+
+    <div class="filter-pills" id="casebook-filters" role="group" aria-label="Filter by category">
+      {categories.map((cat) => (
+        <button
+          type="button"
+          class:list={['filter-pill', { active: cat === 'All' }]}
+          data-filter={cat}
+          data-sfx="click"
+        >
+          {cat} ({countByCat(cat)})
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <section class="casebook-grid" id="casebook-grid">
+    {casebooks.map((doc) => (
+      <a
+        href={`/casebooks/${doc.id}/`}
+        class="casebook-card"
+        data-category={doc.data.category}
+        data-search={`${doc.data.title} ${doc.data.titleVi} ${doc.data.summary} ${doc.data.summaryVi} ${doc.data.category} ${doc.data.tags.join(' ')}`.toLowerCase()}
+      >
+        <div>
+          <div class="badge-row">
+            <span
+              class:list={[
+                'badge',
+                doc.data.category === 'DFIR Lab'
+                  ? 'rose'
+                  : doc.data.category === 'AppSec'
+                    ? 'cyan'
+                    : doc.data.category === 'Automation & SOP'
+                      ? 'amber'
+                      : 'emerald',
+              ]}
+            >
+              {doc.data.category}
+            </span>
+            <span class="badge muted">{doc.data.readTime}</span>
+            <span class="badge muted">{doc.data.date}</span>
+          </div>
+
+          <h2 class="casebook-title">
+            <BiText en={doc.data.title} vi={doc.data.titleVi} />
+          </h2>
+
+          <p class="casebook-summary">
+            <BiText en={doc.data.summary} vi={doc.data.summaryVi} />
+          </p>
+
+          <div class="tag-row">
+            {doc.data.tags.slice(0, 4).map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </div>
+
+        <div class="casebook-footer">
+          <span>✓ <BiText en={doc.data.impact} vi={doc.data.impactVi} /></span>
+          <span class="inline-link">Open →</span>
+        </div>
+      </a>
+    ))}
+  </section>
+
+  <p id="casebook-empty" class="mono" style="display: none; color: var(--muted); text-align: center; padding: 24px 0;">
+    <BiText
+      en="No matching casebooks found. Try clearing filters or searching another keyword."
+      vi="Không tìm thấy hồ sơ phù hợp. Hãy thử bỏ bộ lọc hoặc tìm từ khóa khác."
+    />
+  </p>
+</BaseLayout>

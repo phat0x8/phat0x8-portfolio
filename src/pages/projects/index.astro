@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BiText from '../../components/BiText.astro';
+import { PROFILE, PROJECTS } from '../../data/profile';
+
+const securityProjects = PROJECTS.filter((p) => p.category === 'security');
+const embeddedProjects = PROJECTS.filter((p) => p.category === 'embedded');
+---
+
+<BaseLayout
+  title="Projects Index | phat0x8 — Tan Phat Nguyen"
+  description="OWASP Top 10 web hardening, fault-tolerant Kafka/Spark/Cassandra streaming clusters, enterprise SysAdmin automation, and hardened ESP8266 IoT firmware."
+  activeNav="projects"
+>
+  <section class="terminal-card accent-cyan">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        BUILD // ENGINEERING_&_INFRASTRUCTURE_INDEX
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="section-kicker">BUILD / PROJECT INDEX</div>
+      <h1 class="section-title" style="font-size: 1.8rem; margin-bottom: 10px;">
+        <BiText en="Security Engineering & Infrastructure" vi="Dự án Kỹ thuật Bảo mật & Hạ tầng" />
+      </h1>
+      <p style="margin: 0; color: var(--text-secondary);">
+        <BiText
+          en="End-to-end engineering builds covering OWASP web hardening, distributed real-time telemetry clusters, multi-site enterprise IT automation, and fail-safe embedded IoT firmware."
+          vi="Các hệ thống xây dựng và triển khai thực tế: gia cố web chuẩn OWASP, cụm giám sát dữ liệu phân tán chịu lỗi, tự động hóa vận hành doanh nghiệp đa chi nhánh và firmware IoT chịu lỗi."
+        />
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">01 / SECURITY & INFRASTRUCTURE</div>
+        <h2 class="section-title">
+          <BiText en="AppSec, Streaming Telemetry & Enterprise Ops" vi="AppSec, Hạ tầng Giám sát & Vận hành Doanh nghiệp" />
+        </h2>
+      </div>
+    </div>
+
+    <div class="stack-list">
+      {securityProjects.map((proj) => (
+        <article class:list={['item-card', `tone-${proj.badgeTone}`]}>
+          <div class="item-num">{proj.index}</div>
+          <div>
+            <div class="badge-row">
+              <span class:list={['badge', proj.badgeTone]}>{proj.badge}</span>
+              <span class="badge muted">{proj.period}</span>
+            </div>
+            <h3 class="item-title">
+              <BiText en={proj.title} vi={proj.titleVi} />
+            </h3>
+            <p class="item-desc">
+              <BiText en={proj.summary} vi={proj.summaryVi} />
+            </p>
+            <ul class="item-highlights lang-en">
+              {proj.highlightsEn.map((h) => <li>{h}</li>)}
+            </ul>
+            <ul class="item-highlights lang-vi">
+              {proj.highlightsVi.map((h) => <li>{h}</li>)}
+            </ul>
+            <div class="tag-row">
+              {proj.tags.map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+            {proj.repoUrl && (
+              <div class="item-links">
+                <a href={proj.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+                  GitHub ({proj.repoName}) ↗
+                </a>
+              </div>
+            )}
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-val">{proj.metric}</div>
+            <div class="metric-box-sub">{proj.code.split(' // ')[0]}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">02 / EMBEDDED & IOT SECURITY</div>
+        <h2 class="section-title">
+          <BiText en="Hardware Resilience & Firmware Hygiene" vi="Hệ thống Nhúng & Bảo mật Firmware" />
+        </h2>
+      </div>
+    </div>
+
+    <div class="stack-list">
+      {embeddedProjects.map((proj) => (
+        <article class:list={['item-card', `tone-${proj.badgeTone}`]}>
+          <div class="item-num">{proj.index}</div>
+          <div>
+            <div class="badge-row">
+              <span class:list={['badge', proj.badgeTone]}>{proj.badge}</span>
+              <span class="badge muted">{proj.period}</span>
+            </div>
+            <h3 class="item-title">
+              <BiText en={proj.title} vi={proj.titleVi} />
+            </h3>
+            <p class="item-desc">
+              <BiText en={proj.summary} vi={proj.summaryVi} />
+            </p>
+            <ul class="item-highlights lang-en">
+              {proj.highlightsEn.map((h) => <li>{h}</li>)}
+            </ul>
+            <ul class="item-highlights lang-vi">
+              {proj.highlightsVi.map((h) => <li>{h}</li>)}
+            </ul>
+            <div class="tag-row">
+              {proj.tags.map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+            {proj.repoUrl && (
+              <div class="item-links">
+                <a href={proj.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+                  GitHub ({proj.repoName}) ↗
+                </a>
+              </div>
+            )}
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-val">{proj.metric}</div>
+            <div class="metric-box-sub">IOT102</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="github-status-bar" id="github-sync-bar" data-github-user="phat0x8">
+      <div>
+        <span class="github-live-dot"></span>
+        <span id="github-sync-text">
+          <BiText en="Checking live repositories on github.com/phat0x8..." vi="Đang kiểm tra repository mới trên github.com/phat0x8..." />
+        </span>
+      </div>
+      <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" class="inline-link">
+        All Repositories ↗
+      </a>
+    </div>
+    <div id="github-dynamic-repos" class="github-dynamic-repos" hidden></div>
+  </section>
+</BaseLayout>

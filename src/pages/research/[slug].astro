@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BiText from '../../components/BiText.astro';
+import { RESEARCH_ITEMS, type ResearchItem } from '../../data/profile';
+
+export function getStaticPaths() {
+  return RESEARCH_ITEMS.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+interface Props {
+  item: ResearchItem;
+}
+
+const { item } = Astro.props;
+---
+
+<BaseLayout title={`${item.title} | phat0x8 Research`} description={item.summary} activeNav="research">
+  <div>
+    <a href="/research/" class="inline-link mono" style="font-size: 0.8rem;">
+      ← <BiText en="Back to Research Archive" vi="Quay lại danh sách Nghiên cứu" />
+    </a>
+  </div>
+
+  <section class:list={['terminal-card', `accent-${item.badgeTone}`]}>
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        RESEARCH_CASE_STUDY // {item.code}
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="badge-row">
+        <span class:list={['badge', item.badgeTone]}>✓ {item.badge}</span>
+        <span class="badge muted">{item.period}</span>
+      </div>
+
+      <h1 class="section-title" style="font-size: 1.72rem; margin-bottom: 8px;">
+        <BiText en={item.title} vi={item.titleVi} />
+      </h1>
+      <p class="mono" style="margin: 0 0 12px; font-size: 0.78rem; color: var(--emerald-bright);">
+        <BiText en={item.venue} vi={item.venueVi} />
+      </p>
+      <p style="margin: 0 0 16px; color: var(--text-secondary);">
+        <BiText en={item.summary} vi={item.summaryVi} />
+      </p>
+
+      <div class="workflow-bar">
+        {item.workflow.map((w) => (
+          <div class="workflow-step">
+            <strong>{w.step}</strong>
+            <BiText en={w.en} vi={w.vi} />
+          </div>
+        ))}
+      </div>
+
+      <div class="kpi-grid">
+        {item.kpis.map((kpi) => (
+          <div class="kpi-card">
+            <div class="kpi-label"><BiText en={kpi.labelEn} vi={kpi.labelVi} /></div>
+            <div class="kpi-value">{kpi.value}</div>
+            <div class="kpi-note"><BiText en={kpi.noteEn} vi={kpi.noteVi} /></div>
+          </div>
+        ))}
+      </div>
+
+      <div class="cta-group" style="margin-top: 18px;">
+        <a href={item.repoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" data-sfx="click">
+          GitHub Repository ({item.repoName}) ↗
+        </a>
+        <a href="/about/" class="btn btn-sm">
+          <BiText en="Author Profile →" vi="Hồ sơ Tác giả →" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {item.sections.map((sec) => (
+    <section class="detail-section">
+      <h2>
+        {sec.num} / <BiText en={sec.labelEn} vi={sec.labelVi} />
+      </h2>
+      <div class="lang-en">
+        {sec.bodyEn.map((para) => <p>{para}</p>)}
+      </div>
+      <div class="lang-vi">
+        {sec.bodyVi.map((para) => <p>{para}</p>)}
+      </div>
+    </section>
+  ))}
+
+  <section class="detail-section">
+    <h2>
+      05 / <BiText en="KEY REPOSITORY ARTIFACTS & STACK" vi="TÀI NGUYÊN MÃ NGUỒN & CÔNG NGHỆ" />
+    </h2>
+    <div class="artifact-grid" style="margin-bottom: 16px;">
+      {item.artifacts.map((art) => (
+        <div class="artifact-pill">
+          <code>{art.name}</code>
+          <p><BiText en={art.descEn} vi={art.descVi} /></p>
+        </div>
+      ))}
+    </div>
+    <div class="tag-row">
+      {item.tags.map((tag) => <span class="tag">{tag}</span>)}
+    </div>
+  </section>
+</BaseLayout>

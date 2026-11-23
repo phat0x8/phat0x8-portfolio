@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BiText from '../components/BiText.astro';
+import { PROFILE, EXPERIENCE_TIMELINE, CERTIFICATIONS, AWARDS, TOOLBOX } from '../data/profile';
+---
+
+<BaseLayout
+  title="About & Credentials | phat0x8 — Tan Phat Nguyen"
+  description="Background, enterprise SysAdmin experience, FPT University IA education, Cisco & AI Security certifications, awards, and technical toolbox."
+  activeNav="about"
+>
+  <!-- Profile Dossier -->
+  <section class="terminal-card accent-amber">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        PROFILE_DOSSIER // TAN_PHAT_NGUYEN (@PHAT0X8)
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="section-kicker">ABOUT / BACKGROUND</div>
+      <h1 class="section-title" style="font-size: 1.8rem; margin-bottom: 12px;">
+        <BiText en="Systems thinker. Defensive engineer." vi="Tư duy hệ thống. Kỹ sư phòng thủ." />
+      </h1>
+      <p style="margin: 0 0 12px; color: var(--text-secondary);">
+        <BiText
+          en="I’m Tan Phat Nguyen (@phat0x8), an Information Assurance undergraduate at FPT University Ho Chi Minh City with 1+ year of hands-on enterprise System Administration & IT Support experience across multi-site environments (HQ, Showrooms, and 3 Manufacturing Plants)."
+          vi="Mình là Nguyễn Tấn Phát (@phat0x8), sinh viên chuyên ngành An toàn Thông tin tại Đại học FPT TP.HCM với hơn 01 năm kinh nghiệm thực chiến Quản trị Hệ thống & IT Support trong môi trường doanh nghiệp đa chi nhánh (Văn phòng, Showroom và 3 Nhà máy)."
+        />
+      </p>
+      <p style="margin: 0 0 16px; color: var(--muted);">
+        <BiText
+          en="My path began in Graphic Design before transferring into Information Assurance — giving me a blend of systems-level engineering rigor (AD/Entra ID, SQL Server, DFIR, OWASP, AI Threat Intel) and clear visual documentation. I prioritize reproducible evidence, strict OPSEC, and clean SOP automation."
+          vi="Hành trình của mình bắt đầu từ Thiết kế Đồ họa trước khi chuyển hẳn sang An toàn Thông tin — mang lại sự kết hợp hiếm có giữa nền tảng kỹ thuật hệ thống vững chắc (AD/Entra ID, SQL Server, DFIR, OWASP, AI Threat Intel) và khả năng trực quan hóa tài liệu sắc nét. Mình luôn ưu tiên bằng chứng tái lập, tuân thủ OPSEC và tự động hóa quy trình."
+        />
+      </p>
+      <div class="cta-group">
+        <a href={PROFILE.cvEn} download="Tan_Phat_Nguyen_CV_EN.pdf" class="btn btn-primary btn-sm" data-sfx="click">
+          ↓ <BiText en="Download CV (English)" vi="Tải CV (Tiếng Anh)" />
+        </a>
+        <a href={PROFILE.cvVi} download="Tan_Phat_Nguyen_CV_VN.pdf" class="btn btn-sm" data-sfx="click">
+          ↓ <BiText en="Download CV (Vietnamese)" vi="Tải CV (Tiếng Việt)" />
+        </a>
+        <a href={`mailto:${PROFILE.email}`} class="btn btn-sm">
+          {PROFILE.email} ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience & Education Timeline -->
+  <section id="timeline">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">01 / EXPERIENCE & EDUCATION</div>
+        <h2 class="section-title">
+          <BiText en="Career & Academic Timeline" vi="Lộ trình Kinh nghiệm & Học vấn" />
+        </h2>
+      </div>
+    </div>
+
+    <div class="timeline">
+      {EXPERIENCE_TIMELINE.map((item) => (
+        <article class="timeline-item">
+          <div class="timeline-top">
+            <h3 class="timeline-role">
+              <BiText en={item.roleEn} vi={item.roleVi} />
+            </h3>
+            <span class="badge emerald">
+              <BiText en={item.period} vi={item.periodVi} />
+            </span>
+          </div>
+          <div class="timeline-org">
+            {item.org} <span style="color: var(--dim); font-weight: 400;">· {item.location}</span>
+          </div>
+          <ul class="item-highlights lang-en" style="margin-bottom: 0;">
+            {item.bulletsEn.map((b) => <li>{b}</li>)}
+          </ul>
+          <ul class="item-highlights lang-vi" style="margin-bottom: 0;">
+            {item.bulletsVi.map((b) => <li>{b}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Awards & Milestones -->
+  <section id="awards">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">02 / HONORS & MILESTONES</div>
+        <h2 class="section-title">
+          <BiText en="Publications & Competitions" vi="Công bố Khoa học & Cuộc thi" />
+        </h2>
+      </div>
+    </div>
+
+    <div class="stack-list">
+      {AWARDS.map((aw, idx) => (
+        <article class="item-card tone-amber">
+          <div class="item-num">{String(idx + 1).padStart(2, '0')}</div>
+          <div>
+            <div class="badge-row">
+              <span class="badge amber">{aw.org}</span>
+              <span class="badge muted">{aw.date}</span>
+            </div>
+            <h3 class="item-title">
+              <BiText en={aw.titleEn} vi={aw.titleVi} />
+            </h3>
+            <p class="item-desc" style="margin-bottom: 0;">
+              <BiText en={aw.descEn} vi={aw.descVi} />
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section id="certifications">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">03 / VERIFIED CERTIFICATIONS</div>
+        <h2 class="section-title">
+          <BiText en="Cisco Credly, IBM & AI Security Credentials" vi="Chứng chỉ Cisco Credly, IBM & AI Security" />
+        </h2>
+      </div>
+      <a href={PROFILE.credly} target="_blank" rel="noopener noreferrer" class="section-link">
+        Credly Profile ↗
+      </a>
+    </div>
+
+    <div class="cert-grid">
+      {CERTIFICATIONS.map((cert) => (
+        <a
+          href={cert.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class:list={['cert-card', { highlight: cert.highlight }]}
+        >
+          <div>
+            <div class="badge-row" style="margin-bottom: 6px;">
+              <span class:list={['badge', cert.highlight ? 'emerald' : 'muted']}>{cert.group}</span>
+              <span class="badge muted">{cert.date}</span>
+            </div>
+            <div class="cert-name">{cert.name}</div>
+          </div>
+          <div class="cert-meta" style="display: flex; justify-content: space-between; margin-top: 8px;">
+            <span>{cert.issuer}</span>
+            <span style="color: var(--emerald-bright);">Verify ↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Technical Toolbox -->
+  <section id="toolbox">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">04 / TECHNICAL TOOLBOX</div>
+        <h2 class="section-title">
+          <BiText en="Tools, Platforms & Stack" vi="Công cụ, Nền tảng & Công nghệ" />
+        </h2>
+      </div>
+    </div>
+
+    <div class="toolbox-grid">
+      {TOOLBOX.map((group) => (
+        <div class="toolbox-panel">
+          <h3 class="toolbox-title">
+            <BiText en={group.titleEn} vi={group.titleVi} />
+          </h3>
+          <div class="tag-row">
+            {group.items.map((item) => <span class="tag">{item}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

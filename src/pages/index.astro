@@ -1,0 +1,332 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BiText from '../components/BiText.astro';
+import { PROFILE, RESEARCH_ITEMS, PROJECTS } from '../data/profile';
+
+const featured = RESEARCH_ITEMS[0];
+const casebooks = (await getCollection('casebooks')).sort((a, b) => a.data.order - b.data.order);
+const featuredCasebooks = casebooks.slice(0, 4);
+---
+
+<BaseLayout
+  title="phat0x8 — Tan Phat Nguyen | SOC, DFIR, SysAdmin & AI Security Portfolio"
+  activeNav="home"
+>
+  <section slot="hero" class="container hero-wrap">
+    <div class="hero-card">
+      <div class="hero-top-row">
+        <div class="eyebrow-pill">
+          <span class="pulse-dot"></span>
+          BLUE TEAM • DFIR • SYSADMIN • AI SECURITY
+        </div>
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="lang-en">Hi, I’m <span class="accent-name">Tan Phat</span> <span class="mono" style="font-size: 0.65em; color: var(--muted);">(@phat0x8)</span>.</span>
+        <span class="lang-vi">Chào bạn, mình là <span class="accent-name">Tấn Phát</span> <span class="mono" style="font-size: 0.65em; color: var(--muted);">(@phat0x8)</span>.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        <BiText
+          en="Information Assurance engineer bridging enterprise system administration, Blue Team / DFIR investigations, OWASP web hardening, and AI-driven Cyber Threat Intelligence."
+          vi="Sinh viên An toàn Thông tin kết nối quản trị hệ thống doanh nghiệp thực chiến, điều tra số (DFIR) / Blue Team, bảo mật ứng dụng chuẩn OWASP và nghiên cứu AI Threat Intelligence."
+        />
+      </p>
+
+      <div class="hero-metrics">
+        <div class="metric-pill">
+          <strong>IEEE ICEEIS ’26</strong>
+          <BiText en="Accepted Abstract (#228)" vi="Chấp nhận Abstract (#228)" />
+        </div>
+        <div class="metric-pill">
+          <strong>130+</strong>
+          <BiText en="Enterprise Incidents · 5+ Sites" vi="Ca hỗ trợ DN · 5+ Chi nhánh" />
+        </div>
+        <div class="metric-pill">
+          <strong>15 DFIR Labs</strong>
+          <BiText en="· 151/151 OWASP Pytest" vi="· 151/151 OWASP Pytest" />
+        </div>
+      </div>
+
+      <div class="hero-bottom-row">
+        <div class="cta-group">
+          <a href="/research/" class="btn btn-primary" data-sfx="click">
+            <BiText en="Explore Research ↗" vi="Xem Nghiên cứu ↗" />
+          </a>
+          <a href="/casebooks/" class="btn" data-sfx="click">
+            <BiText en="Read DFIR & RCA Casebooks ↗" vi="Đọc Hồ sơ DFIR & RCA ↗" />
+          </a>
+          <a href={PROFILE.cvEn} download="Tan_Phat_Nguyen_CV_EN.pdf" class="btn" data-sfx="click">
+            <BiText en="Download CV (PDF) ↓" vi="Tải CV (PDF) ↓" />
+          </a>
+        </div>
+
+        <div class="hero-sig">
+          <div>TAN PHAT NGUYEN (@PHAT0X8)</div>
+          <div>HO CHI MINH CITY • FPT UNIVERSITY</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Research Showcase -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          <BiText en="FEATURED RESEARCH" vi="NGHIÊN CỨU TIÊU BIỂU" />
+        </div>
+        <h2 class="section-title">
+          <BiText en="Selected milestone." vi="Dấu ấn nổi bật." />
+        </h2>
+      </div>
+      <a href={`/research/${featured.slug}/`} class="section-link">
+        <BiText en="Open full study ↗" vi="Đọc chi tiết ↗" />
+      </a>
+    </div>
+
+    <article class="terminal-card accent-emerald">
+      <div class="window-bar">
+        <span class="window-title">
+          <span class="window-dot"></span>
+          FEATURED_RESEARCH // {featured.code}
+        </span>
+        <span class="window-controls" aria-hidden="true">- □ ×</span>
+      </div>
+      <div class="card-body featured-grid">
+        <div class="radar-box" aria-hidden="true">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-core">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+              <path d="M21 4L35 12V28L21 36L7 28V12L21 4Z" fill="#0d1f21" stroke="#34d399" stroke-width="2" />
+              <path d="M15 21L19.2 25.2L27.5 16.5" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>SECBERT · CTI</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="badge-row">
+            <span class="badge emerald">✓ {featured.badge}</span>
+            <span class="badge amber">{featured.metricBadge} · {featured.metricSub}</span>
+          </div>
+          <h3 class="featured-title">
+            <a href={`/research/${featured.slug}/`}>
+              <BiText en={featured.title} vi={featured.titleVi} />
+            </a>
+          </h3>
+          <p class="featured-desc">
+            <BiText en={featured.summary} vi={featured.summaryVi} />
+          </p>
+          <div class="tag-row" style="margin-bottom: 14px;">
+            {featured.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+          <div class="item-links" style="margin-top: 0;">
+            <a href={`/research/${featured.slug}/`} class="inline-link">
+              <BiText en="Read case study →" vi="Xem chi tiết nghiên cứu →" />
+            </a>
+            <a href={featured.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+              GitHub ({featured.repoName}) ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- AI Security & Binary Research -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          <BiText en="AI SECURITY & REVERSE ENGINEERING" vi="BẢO MẬT AI & DỊCH NGƯỢC" />
+        </div>
+        <h2 class="section-title">
+          <BiText en="From the research lab." vi="Từ phòng lab nghiên cứu." />
+        </h2>
+      </div>
+      <a href="/research/" class="section-link">
+        <BiText en="All research ↗" vi="Tất cả nghiên cứu ↗" />
+      </a>
+    </div>
+
+    <div class="stack-list">
+      {RESEARCH_ITEMS.map((item) => (
+        <article class:list={['item-card', `tone-${item.badgeTone}`]}>
+          <div class="item-num">{item.index}</div>
+          <div>
+            <div class="badge-row">
+              <span class:list={['badge', item.badgeTone]}>{item.badge}</span>
+              <span class="badge muted">{item.period}</span>
+            </div>
+            <h3 class="item-title">
+              <a href={`/research/${item.slug}/`}>
+                <BiText en={item.title} vi={item.titleVi} />
+              </a>
+            </h3>
+            <p class="item-desc">
+              <BiText en={item.summary} vi={item.summaryVi} />
+            </p>
+            <div class="tag-row">
+              {item.tags.slice(0, 5).map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+            <div class="item-links">
+              <a href={`/research/${item.slug}/`} class="inline-link">
+                <BiText en="Inspect methodology →" vi="Xem phương pháp →" />
+              </a>
+              <a href={item.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+                Source repository ↗
+              </a>
+            </div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-val">{item.metricBadge}</div>
+            <div class="metric-box-sub">{item.metricSub}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Security Engineering & Infrastructure -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          <BiText en="SECURITY ENGINEERING & INFRASTRUCTURE" vi="KỸ THUẬT BẢO MẬT & HẠ TẦNG" />
+        </div>
+        <h2 class="section-title">
+          <BiText en="Production systems & hardening." vi="Hệ thống thực chiến & gia cố bảo mật." />
+        </h2>
+      </div>
+      <a href="/projects/" class="section-link">
+        <BiText en="Full project index ↗" vi="Tất cả dự án ↗" />
+      </a>
+    </div>
+
+    <div class="stack-list">
+      {PROJECTS.map((proj) => (
+        <article class:list={['item-card', `tone-${proj.badgeTone}`]}>
+          <div class="item-num">{proj.index}</div>
+          <div>
+            <div class="badge-row">
+              <span class:list={['badge', proj.badgeTone]}>{proj.badge}</span>
+              <span class="badge muted">{proj.period}</span>
+            </div>
+            <h3 class="item-title">
+              <BiText en={proj.title} vi={proj.titleVi} />
+            </h3>
+            <p class="item-desc">
+              <BiText en={proj.summary} vi={proj.summaryVi} />
+            </p>
+            <div class="tag-row">
+              {proj.tags.slice(0, 5).map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+            {proj.repoUrl && (
+              <div class="item-links">
+                <a href={proj.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+                  GitHub ({proj.repoName}) ↗
+                </a>
+              </div>
+            )}
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-val">{proj.metric}</div>
+            <div class="metric-box-sub">{proj.code.split(' // ')[0]}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Live GitHub Sync Status -->
+    <div style="margin-top: 14px;">
+      <div class="github-status-bar" id="github-sync-bar" data-github-user="phat0x8">
+        <div>
+          <span class="github-live-dot"></span>
+          <span id="github-sync-text">
+            <BiText
+              en="Checking live GitHub repositories for @phat0x8..."
+              vi="Đang đồng bộ danh sách repository mới nhất từ @phat0x8..."
+            />
+          </span>
+        </div>
+        <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" class="inline-link">
+          github.com/phat0x8 ↗
+        </a>
+      </div>
+      <div id="github-dynamic-repos" class="github-dynamic-repos" hidden></div>
+    </div>
+  </section>
+
+  <!-- Recent Casebooks Preview -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          <BiText en="OPERATIONAL & DFIR CASEBOOKS" vi="HỒ SƠ DFIR & VẬN HÀNH" />
+        </div>
+        <h2 class="section-title">
+          <BiText en="Sanitized field notes & RCAs." vi="Ghi chép thực chiến & báo cáo RCA." />
+        </h2>
+      </div>
+      <a href="/casebooks/" class="section-link">
+        <BiText en={`Browse all ${casebooks.length} casebooks ↗`} vi={`Xem đủ ${casebooks.length} hồ sơ ↗`} />
+      </a>
+    </div>
+
+    <div class="casebook-grid">
+      {featuredCasebooks.map((doc) => (
+        <a href={`/casebooks/${doc.id}/`} class="casebook-card" data-category={doc.data.category}>
+          <div>
+            <div class="badge-row">
+              <span class="badge emerald">{doc.data.category}</span>
+              <span class="badge muted">{doc.data.readTime}</span>
+            </div>
+            <h3 class="casebook-title">
+              <BiText en={doc.data.title} vi={doc.data.titleVi} />
+            </h3>
+            <p class="casebook-summary">
+              <BiText en={doc.data.summary} vi={doc.data.summaryVi} />
+            </p>
+          </div>
+          <div class="casebook-footer">
+            <span><BiText en={doc.data.impact} vi={doc.data.impactVi} /></span>
+            <span class="inline-link">Read →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Direct Contact CTA -->
+  <section class="contact-card">
+    <div>
+      <div class="section-kicker">
+        <BiText en="DIRECT CONTACT · OPSEC READY" vi="LIÊN HỆ TRỰC TIẾP · SẴN SÀNG OJT" />
+      </div>
+      <h2 class="section-title" style="margin-bottom: 6px;">
+        <BiText en="Looking for a hands-on Security / SOC / SysAdmin intern?" vi="Cần cộng sự thực chiến cho vị trí SOC / DFIR / SysAdmin?" />
+      </h2>
+      <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
+        <BiText
+          en="Open for OJT internships, Blue Team / SOC collaboration, and security research discussions."
+          vi="Sẵn sàng cho kỳ thực tập OJT doanh nghiệp, hợp tác dự án Blue Team / SOC và nghiên cứu An toàn Thông tin."
+        />
+      </p>
+    </div>
+    <div class="cta-group">
+      <a href={`mailto:${PROFILE.email}`} class="btn btn-primary" data-sfx="click">
+        <BiText en="Get in touch ↗" vi="Gửi Email ngay ↗" />
+      </a>
+      <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" class="btn" data-sfx="click">
+        LinkedIn ↗
+      </a>
+    </div>
+  </section>
+</BaseLayout>

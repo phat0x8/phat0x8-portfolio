@@ -1,0 +1,93 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BiText from '../../components/BiText.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('casebooks');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout title={`${entry.data.title} | phat0x8 Casebooks`} description={entry.data.summary} activeNav="casebooks">
+  <div>
+    <a href="/casebooks/" class="inline-link mono" style="font-size: 0.8rem;">
+      ← <BiText en="Back to Casebooks" vi="Quay lại Hồ sơ Lab" />
+    </a>
+  </div>
+
+  <section class="terminal-card accent-emerald">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        CASEBOOK // {entry.data.category.toUpperCase()} · {entry.data.date}
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="badge-row">
+        <span class="badge emerald">{entry.data.category}</span>
+        <span class="badge cyan">✓ {entry.data.status}</span>
+        <span class="badge muted">{entry.data.readTime}</span>
+      </div>
+
+      <h1 class="section-title" style="font-size: 1.7rem; margin-bottom: 10px;">
+        <BiText en={entry.data.title} vi={entry.data.titleVi} />
+      </h1>
+
+      <p style="margin: 0 0 14px; color: var(--text-secondary);">
+        <BiText en={entry.data.summary} vi={entry.data.summaryVi} />
+      </p>
+
+      <div class="badge-row" style="margin-bottom: 14px;">
+        <span class="badge amber">
+          ★ <BiText en={entry.data.impact} vi={entry.data.impactVi} />
+        </span>
+      </div>
+
+      <div class="tag-row" style="margin-bottom: 16px;">
+        {entry.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+      </div>
+
+      <div class="cta-group">
+        <a href="#article-content" class="btn btn-primary btn-sm">
+          <BiText en="Start reading ↓" vi="Bắt đầu đọc ↓" />
+        </a>
+        {entry.data.repoUrl && (
+          <a href={entry.data.repoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-sm">
+            GitHub Source ↗
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {tocHeadings.length > 0 && (
+    <details class="toc-box" open>
+      <summary>
+        <span>
+          <BiText en="TABLE OF CONTENTS — Expand or collapse" vi="MỤC LỤC BÀI VIẾT — Mở rộng hoặc thu gọn" />
+        </span>
+        <span>{tocHeadings.length} sections</span>
+      </summary>
+      <nav class="toc-list" aria-label="Table of contents">
+        {tocHeadings.map((h) => (
+          <a href={`#${h.slug}`} class:list={{ 'toc-depth-3': h.depth === 3 }}>
+            {h.text}
+          </a>
+        ))}
+      </nav>
+    </details>
+  )}
+
+  <article id="article-content" class="prose">
+    <Content />
+  </article>
+</BaseLayout>

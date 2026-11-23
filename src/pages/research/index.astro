@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BiText from '../../components/BiText.astro';
+import { PROFILE, RESEARCH_ITEMS } from '../../data/profile';
+---
+
+<BaseLayout
+  title="Research Archive | phat0x8 — Tan Phat Nguyen"
+  description="AI Threat Intelligence, MITRE ATT&CK classification with SecBERT (IEEE ICEEIS 2026), and LLM binary reverse engineering hallucination benchmarks."
+  activeNav="research"
+>
+  <section class="terminal-card accent-emerald">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot"></span>
+        RESEARCH // AI_SECURITY_&_BINARY_ANALYSIS
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="section-kicker">RESEARCH / ARCHIVE</div>
+      <h1 class="section-title" style="font-size: 1.8rem; margin-bottom: 10px;">
+        <BiText en="AI Security & Binary Analysis Research" vi="Nghiên cứu Bảo mật AI & Phân tích Binary" />
+      </h1>
+      <p style="margin: 0; color: var(--text-secondary);">
+        <BiText
+          en="Peer-reviewed and reproducible security research bridging Transformer NLP for Cyber Threat Intelligence (MITRE ATT&CK) and empirical evaluation of LLM reliability in x86_64 binary reverse engineering."
+          vi="Các nghiên cứu an toàn thông tin có tính tái lập cao, kết nối xử lý ngôn ngữ tự nhiên (Transformer NLP) cho Cyber Threat Intelligence (MITRE ATT&CK) và đánh giá thực nghiệm độ tin cậy của LLM trong dịch ngược binary x86_64."
+        />
+      </p>
+    </div>
+  </section>
+
+  <section class="stack-list">
+    {RESEARCH_ITEMS.map((item) => (
+      <article class:list={['item-card', `tone-${item.badgeTone}`]}>
+        <div class="item-num">{item.index}</div>
+        <div>
+          <div class="badge-row">
+            <span class:list={['badge', item.badgeTone]}>{item.badge}</span>
+            <span class="badge muted">{item.period}</span>
+          </div>
+          <h2 class="item-title" style="font-size: 1.18rem;">
+            <a href={`/research/${item.slug}/`}>
+              <BiText en={item.title} vi={item.titleVi} />
+            </a>
+          </h2>
+          <p class="mono" style="margin: 0 0 8px; font-size: 0.76rem; color: var(--emerald-bright);">
+            <BiText en={item.venue} vi={item.venueVi} />
+          </p>
+          <p class="item-desc">
+            <BiText en={item.summary} vi={item.summaryVi} />
+          </p>
+          <div class="tag-row">
+            {item.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+          <div class="item-links">
+            <a href={`/research/${item.slug}/`} class="inline-link">
+              <BiText en="Open full case study →" vi="Mở chi tiết nghiên cứu →" />
+            </a>
+            <a href={item.repoUrl} target="_blank" rel="noopener noreferrer" class="inline-link">
+              GitHub ({item.repoName}) ↗
+            </a>
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-val">{item.metricBadge}</div>
+          <div class="metric-box-sub">{item.metricSub}</div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section>
+    <div class="github-status-bar" id="github-sync-bar" data-github-user="phat0x8">
+      <div>
+        <span class="github-live-dot"></span>
+        <span id="github-sync-text">
+          <BiText en="Syncing live repositories from @phat0x8..." vi="Đang đồng bộ repository từ @phat0x8..." />
+        </span>
+      </div>
+      <a href={PROFILE.githubOrg} target="_blank" rel="noopener noreferrer" class="inline-link">
+        {PROFILE.githubOrgName} ↗
+      </a>
+    </div>
+    <div id="github-dynamic-repos" class="github-dynamic-repos" hidden></div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BiText from '../components/BiText.astro';
+---
+
+<BaseLayout title="404 — Route Not Found | phat0x8" activeNav="home">
+  <section class="terminal-card accent-rose">
+    <div class="window-bar">
+      <span class="window-title">
+        <span class="window-dot" style="background: var(--rose);"></span>
+        STATUS // HTTP_404_NOT_FOUND
+      </span>
+      <span class="window-controls" aria-hidden="true">- □ ×</span>
+    </div>
+    <div class="card-body">
+      <div class="section-kicker" style="color: var(--rose);">ERROR 404</div>
+      <h1 class="section-title" style="font-size: 1.85rem; margin-bottom: 10px;">
+        <BiText en="Endpoint not found on this perimeter." vi="Không tìm thấy đường dẫn bạn yêu cầu." />
+      </h1>
+      <p style="margin: 0 0 18px; color: var(--muted);">
+        <BiText
+          en="The requested resource does not exist or was moved during a casebook update."
+          vi="Tài nguyên bạn tìm kiếm không tồn tại hoặc đã được di chuyển trong quá trình cập nhật."
+        />
+      </p>
+      <div class="cta-group">
+        <a href="/" class="btn btn-primary btn-sm">
+          <BiText en="Return Home →" vi="Về Trang chủ →" />
+        </a>
+        <a href="/casebooks/" class="btn btn-sm">
+          <BiText en="Browse Casebooks" vi="Xem Hồ sơ Lab" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
